@@ -7,15 +7,17 @@ process.addListener('SIGINT', function () {});
 
 var logName = 'profile-'+Date.now()+Math.floor(Math.random()*10000)+'.log';
 var args = {};
+var profLazy = false;
 process.ARGV.splice(3).join(' ').split('-').forEach(function (arg) {
 	var argParts = arg.split('=');
 
+	if(argParts[0].trim() == "prof_lazy") profLazy = true;
 	if (argParts[0] && argParts[1]) {
 		args[argParts[0].trim()] = argParts[1].trim();
 	}
 });
 
-var command = 'node --prof --log-snapshot-positions --logfile='+logName+' '+process.ARGV[2];
+var command = 'node --prof'+(profLazy ? ' --prof_lazy':'')+' --log-snapshot-positions --logfile='+logName+' '+process.ARGV[2];
 
 console.log('Running: '+command);
 
